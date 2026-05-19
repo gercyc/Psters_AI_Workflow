@@ -104,10 +104,10 @@ Parse each subagent's JSON response. For each repo, print one row per commit:
 
 | Repo | Ticket | Commit message | Files | Result |
 |------|--------|----------------|-------|--------|
-| frontend | TICKET-727 | `[TICKET-727] 🐛 fix(tasks): move back-to-table btn to right` | 2 files | ✅ |
-| frontend | TICKET-726 | `[TICKET-726] 🐛 fix(text-input): allow click inside widget` | 1 file | ✅ |
-| backend  | TICKET-729 | `[TICKET-729] 🚀 feat(projects): add lead as contributor on demotion` | 3 files | ✅ |
-| backend  | NONE    | `🔧 chore(migrations): add project lead contributor migration` | 1 file | ✅ |
+| frontend | TICKET-727 | `[TICKET-727] fix(tasks): move back-to-table btn to right` | 2 files | ✅ |
+| frontend | TICKET-726 | `[TICKET-726] fix(text-input): allow click inside widget` | 1 file | ✅ |
+| backend  | TICKET-729 | `[TICKET-729] feat(projects): add lead as contributor on demotion` | 3 files | ✅ |
+| backend  | NONE    | `chore(migrations): add project lead contributor migration` | 1 file | ✅ |
 
 Then show a quick summary line:
 > "X repos committed, Y commits total. All commits are local only — push each repo when ready."
@@ -118,11 +118,11 @@ If any commit **failed**, show the error and suggest: "Fix the issue and re-run 
 
 ## Commit Rules (rules/commits.mdc — always enforced)
 
-- **Format**: `[TICKET-XXXX] <emoji> <type>(<scope>): <subject>`
+- **Format**: `[TICKET-XXXX] <type>(<scope>): <subject>`
 - **English only** — subject and all commit text in English.
 - **Imperative mood** — "add", "fix", "remove" (not "added"/"adds").
-- **Subject ≤ 50 chars** (not counting `[TICKET-XXXX]` prefix and emoji/type).
-- **Emoji required** — always pick from the type reference table.
+- **Subject ≤ 50 chars** (not counting `[TICKET-XXXX]` prefix).
+- **NEVER USES Emoji** — NEVER NEVER NEVER pick from the type reference table.
 - **Ticket as prefix only** — never inside the subject line.
 - **No branches, no push** — targeted `git add <files>` + `git commit` on current branch only.
 - **No bulk staging** — never `git add -A`; stage only the files belonging to each commit group.

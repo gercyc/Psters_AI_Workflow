@@ -1,0 +1,16 @@
+{
+  "name": "psters-ai-workflow",
+  "displayName": "Psters AI Workflow",
+  "version": "1.0.1",
+  "description": "Daily AI development workflow with planning, execution, review, and commit conventions.",
+  "author": {
+    "name": "Gercy Campos"
+  },
+  "license": "MIT",
+  "keywords": ["workflow", "ai", "planning", "review", "commits", "claude"],
+  "logo": "assets/logo.svg",
+  "commands": "commands",
+  "skills": "skills",
+  "agents": "agents",
+  "hooks": "hooks/hooks.claude.json"
+}

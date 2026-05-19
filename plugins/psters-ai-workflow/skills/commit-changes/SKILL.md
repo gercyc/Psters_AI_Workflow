@@ -47,27 +47,27 @@ This produces clean, reviewable git history with one commit per ticket per repo.
 ## Commit message rules (rules/commits.mdc — always enforced)
 
 ```
-[TICKET-XXXX] <emoji> <type>(<scope>): <subject>
+[TICKET-XXXX] <type>(<scope>): <subject>
 ```
 
 | Rule | Detail |
 |------|--------|
 | **Language** | English only |
 | **Ticket prefix** | `[TICKET-XXXX]` when a ticket match exists; omit when NONE |
-| **Emoji** | Always include — 🐛 fix, 🚀 feat, ♻️ refactor, 🎨 style, ⚡ perf, ✅ test, 📝 docs, 🔧 chore, 🔒 security, 🚧 wip |
+| **Emojis** | Never — no emojis in commit messages |
 | **Type** | One of: fix, feat, refactor, style, perf, test, docs, chore, security, wip |
 | **Mood** | Imperative — "add", not "added" / "adds" |
-| **Subject length** | ≤ 50 characters (not counting the `[TICKET-XXX]` prefix and emoji+type) |
+| **Subject length** | ≤ 50 characters (not counting the `[TICKET-XXX]` prefix and type) |
 | **Ticket position** | Prefix only — never inside the subject line itself |
 
 **Examples:**
 
 ```
-[TICKET-727] 🐛 fix(tasks): move back-to-table btn to right side
-[TICKET-726] 🐛 fix(text-input): allow clicking inside widget
-[TICKET-734] 🐛 fix(tasks): prevent stale WebSocket reconnect error
-[TICKET-729] 🚀 feat(projects): demote lead adds them as contributor
-🔧 chore(migrations): add project lead contributor column   ← no ticket when unmatched
+[TICKET-727] fix(tasks): move back-to-table btn to right side
+[TICKET-726] fix(text-input): allow clicking inside widget
+[TICKET-734] fix(tasks): prevent stale WebSocket reconnect error
+[TICKET-729] feat(projects): demote lead adds them as contributor
+chore(migrations): add project lead contributor column   ← no ticket when unmatched
 ```
 
 ## Constraints

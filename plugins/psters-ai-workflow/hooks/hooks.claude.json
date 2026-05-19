@@ -1,0 +1,36 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${PWF_PLUGIN_ROOT}/hooks/track-edit.mjs"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${PWF_PLUGIN_ROOT}/hooks/commit-convention-reminder.mjs"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${PWF_PLUGIN_ROOT}/hooks/doc-guard-stop.mjs"
+          }
+        ]
+      }
+    ]
+  }
+}
