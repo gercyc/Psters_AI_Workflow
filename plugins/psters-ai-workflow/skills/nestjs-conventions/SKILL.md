@@ -1,6 +1,6 @@
 ---
 name: nestjs-conventions
-description: Backend conventions for NestJS projects: modules, controllers, services, DTOs, migrations, structure. Use when implementing or reviewing code in NestJS backends.
+description: "Backend conventions for NestJS projects: modules, controllers, services, DTOs, migrations, structure. Use when implementing or reviewing code in NestJS backends."
 ---
 
 # NestJS Conventions

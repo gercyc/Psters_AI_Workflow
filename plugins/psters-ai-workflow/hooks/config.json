@@ -1,0 +1,21 @@
+{
+  "_comment": "Per-hook enable/disable config for psters-ai-workflow (Claude Code). Set 'enabled' to false to skip a hook entirely. Reload plugins (`/reload-plugins`) after editing.",
+  "hooks": {
+    "track-edit": {
+      "enabled": true,
+      "description": "Tracks code vs doc edits per session to power the doc-guard Stop hook."
+    },
+    "migration-atomic-reminder": {
+      "enabled": true,
+      "description": "Reminds to run drift-check + run locally right after typeorm:generate."
+    },
+    "commit-convention-reminder": {
+      "enabled": true,
+      "description": "Reminds the [TICKET-XXXX] commit prefix on `git commit`."
+    },
+    "doc-guard-stop": {
+      "enabled": true,
+      "description": "On Stop, warns when code was edited but no docs were touched in the session."
+    }
+  }
+}

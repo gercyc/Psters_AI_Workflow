@@ -11,6 +11,9 @@ function inferPluginRoot() {
   if (process.env.CURSOR_PLUGIN_ROOT && process.env.CURSOR_PLUGIN_ROOT.trim()) {
     return resolve(process.env.CURSOR_PLUGIN_ROOT);
   }
+  if (process.env.CLAUDE_PLUGIN_ROOT && process.env.CLAUDE_PLUGIN_ROOT.trim()) {
+    return resolve(process.env.CLAUDE_PLUGIN_ROOT);
+  }
   const thisFile = fileURLToPath(import.meta.url);
   return resolve(dirname(thisFile), "..");
 }

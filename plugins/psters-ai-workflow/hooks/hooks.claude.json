@@ -1,4 +1,5 @@
 {
+  "_comment": "All entries route through dispatcher.mjs with PSTERS_HOOK_NAME set. Toggle individual hooks on/off in hooks/config.json — no need to edit this file.",
   "hooks": {
     "PostToolUse": [
       {
@@ -6,7 +7,28 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node ${PWF_PLUGIN_ROOT}/hooks/track-edit.mjs"
+            "command": "node",
+            "args": [
+              "${CLAUDE_PLUGIN_ROOT}/hooks/dispatcher.mjs"
+            ],
+            "env": {
+              "PSTERS_HOOK_NAME": "track-edit"
+            }
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node",
+            "args": [
+              "${CLAUDE_PLUGIN_ROOT}/hooks/dispatcher.mjs"
+            ],
+            "env": {
+              "PSTERS_HOOK_NAME": "migration-atomic-reminder"
+            }
           }
         ]
       }
@@ -17,7 +39,13 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node ${PWF_PLUGIN_ROOT}/hooks/commit-convention-reminder.mjs"
+            "command": "node",
+            "args": [
+              "${CLAUDE_PLUGIN_ROOT}/hooks/dispatcher.mjs"
+            ],
+            "env": {
+              "PSTERS_HOOK_NAME": "commit-convention-reminder"
+            }
           }
         ]
       }
@@ -27,7 +55,13 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node ${PWF_PLUGIN_ROOT}/hooks/doc-guard-stop.mjs"
+            "command": "node",
+            "args": [
+              "${CLAUDE_PLUGIN_ROOT}/hooks/dispatcher.mjs"
+            ],
+            "env": {
+              "PSTERS_HOOK_NAME": "doc-guard-stop"
+            }
           }
         ]
       }
