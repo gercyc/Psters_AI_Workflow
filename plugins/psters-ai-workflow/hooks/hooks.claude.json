@@ -1,0 +1,70 @@
+{
+  "_comment": "All entries route through dispatcher.mjs with PSTERS_HOOK_NAME set. Toggle individual hooks on/off in hooks/config.json — no need to edit this file.",
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node",
+            "args": [
+              "${CLAUDE_PLUGIN_ROOT}/hooks/dispatcher.mjs"
+            ],
+            "env": {
+              "PSTERS_HOOK_NAME": "track-edit"
+            }
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node",
+            "args": [
+              "${CLAUDE_PLUGIN_ROOT}/hooks/dispatcher.mjs"
+            ],
+            "env": {
+              "PSTERS_HOOK_NAME": "migration-atomic-reminder"
+            }
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node",
+            "args": [
+              "${CLAUDE_PLUGIN_ROOT}/hooks/dispatcher.mjs"
+            ],
+            "env": {
+              "PSTERS_HOOK_NAME": "commit-convention-reminder"
+            }
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node",
+            "args": [
+              "${CLAUDE_PLUGIN_ROOT}/hooks/dispatcher.mjs"
+            ],
+            "env": {
+              "PSTERS_HOOK_NAME": "doc-guard-stop"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

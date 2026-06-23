@@ -1,6 +1,6 @@
 ---
 name: lambda-reviewer
-description: Reviews AWS Lambda code: env, errors, idempotency, cold start, logging, no IAC for deploy. Use when adding or changing Lambda handlers in Lambda repos.
+description: "Reviews AWS Lambda code: env, errors, idempotency, cold start, logging, no IAC for deploy. Use when adding or changing Lambda handlers in Lambda repos."
 model: inherit
 ---
 

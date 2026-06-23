@@ -1,6 +1,6 @@
 ---
 name: angular-conventions
-description: Frontend conventions for Angular projects: standalone components, features, error capture, styles. Use when implementing or reviewing code in Angular frontends.
+description: "Frontend conventions for Angular projects: standalone components, features, error capture, styles. Use when implementing or reviewing code in Angular frontends."
 ---
 
 # Angular Conventions

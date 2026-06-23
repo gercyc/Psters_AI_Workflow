@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "sessions": {
+    "t1": {
+      "codeEdits": 1,
+      "docEdits": 0,
+      "touched": [
+        "src/foo.ts"
+      ]
+    },
+    "t2": {
+      "codeEdits": 1,
+      "docEdits": 0,
+      "touched": [
+        "src/foo.ts"
+      ]
+    },
+    "t3": {
+      "codeEdits": 1,
+      "docEdits": 0,
+      "touched": [
+        "src/foo.ts"
+      ]
+    }
+  },
+  "updatedAt": 1781142915217
+}

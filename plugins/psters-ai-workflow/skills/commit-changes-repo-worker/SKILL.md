@@ -87,22 +87,22 @@ For each group, in order (ticket groups first, NONE groups last):
 
 ### 4a — Build the commit message
 
-Format: `[TICKET-XXXX] <emoji> <type>(<scope>): <subject>`
+Format: `[TICKET-XXXX] <type>(<scope>): <subject>`
 
-Commit type + emoji reference:
+Commit type reference:
 
-| Emoji | Type | When |
-|---|---|---|
-| 🚀 | feat | new user-visible feature |
-| 🐛 | fix | bug fix |
-| ♻️ | refactor | code restructuring, no behaviour change |
-| 🎨 | style | SCSS/CSS/formatting only |
-| ⚡ | perf | performance improvement |
-| ✅ | test | tests only |
-| 📝 | docs | documentation |
-| 🔧 | chore | maintenance, config, tooling, dependencies |
-| 🔒 | security | security fix |
-| 🚧 | wip | incomplete / in-progress work |
+| Type | When |
+|---|---|
+| feat | new user-visible feature |
+| fix | bug fix |
+| refactor | code restructuring, no behaviour change |
+| style | SCSS/CSS/formatting only |
+| perf | performance improvement |
+| test | tests only |
+| docs | documentation |
+| chore | maintenance, config, tooling, dependencies |
+| security | security fix |
+| wip | incomplete / in-progress work |
 
 Rules:
 - `[TICKET-XXXX]` prefix only when the group has a matched ticket; omit for `NONE`.
@@ -142,14 +142,14 @@ Reply with **exactly** this JSON and nothing else:
   "commits": [
     {
       "ticket": "TICKET-XXX or NONE",
-      "message": "[TICKET-727] 🐛 fix(tasks): move back-to-table button to right side",
+      "message": "[TICKET-727] fix(tasks): move back-to-table button to right side",
       "files": ["path/to/file1.ts", "path/to/file2.html"],
       "result": "ok | failed",
       "error": null
     },
     {
       "ticket": "TICKET-726",
-      "message": "[TICKET-726] 🐛 fix(text-input): allow clicking inside widget",
+      "message": "[TICKET-726] fix(text-input): allow clicking inside widget",
       "files": ["path/to/text-input.component.scss"],
       "result": "ok | failed",
       "error": null
