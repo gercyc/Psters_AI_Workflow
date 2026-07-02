@@ -1,0 +1,25 @@
+{
+  "name": "psters-marketplace",
+  "owner": {
+    "name": "Gercy Campos"
+  },
+  "metadata": {
+    "description": "Marketplace de plugins do Psters AI Workflow para Claude Code."
+  },
+  "plugins": [
+    {
+      "name": "psters-ai-workflow",
+      "source": "./plugins/psters-ai-workflow",
+      "description": "Daily AI development workflow with planning, execution, review, and commit conventions.",
+      "version": "1.0.2",
+      "author": {
+        "name": "Gercy Campos"
+      },
+      "license": "MIT",
+      "homepage": "https://github.com/gercyc/Psters_AI_Workflow",
+      "repository": "https://github.com/gercyc/Psters_AI_Workflow",
+      "keywords": ["workflow", "ai", "planning", "review", "commits", "claude"],
+      "category": "workflow"
+    }
+  ]
+}
