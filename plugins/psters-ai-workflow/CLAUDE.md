@@ -14,6 +14,37 @@ cp -r plugins/psters-ai-workflow/.claude-plugin/. .claude/plugins/psters-ai-work
 node plugins/psters-ai-workflow/scripts/install-claude.mjs
 ```
 
+## Releasing / Updating
+
+This repo is a **git marketplace** (`.claude-plugin/marketplace.json` at the repo root), so
+Claude Code installs and updates the plugin directly from GitHub:
+
+```
+/plugin marketplace add gercyc/Psters_AI_Workflow
+/plugin install psters-ai-workflow@psters-marketplace
+/plugin update psters-ai-workflow          # after a new release is merged to main
+```
+
+`/plugin update` only detects a new release when the **version changes**, and the version
+must stay in sync across BOTH manifests:
+
+- `plugins/psters-ai-workflow/.claude-plugin/plugin.json` (plugin manifest)
+- `.claude-plugin/marketplace.json` (marketplace entry)
+
+**Always bump via the script** — it updates both files together and refuses to run if they
+have drifted apart:
+
+```bash
+node plugins/psters-ai-workflow/scripts/bump-version.mjs patch   # 1.0.x -> 1.0.(x+1)
+node plugins/psters-ai-workflow/scripts/bump-version.mjs minor   # new skill/command/feature
+node plugins/psters-ai-workflow/scripts/bump-version.mjs major   # breaking change
+node plugins/psters-ai-workflow/scripts/bump-version.mjs --dry-run minor   # preview only
+```
+
+Release flow: bump → commit `chore(release): vX.Y.Z` → PR → merge to `main` → `/plugin update`.
+Rule of thumb: **any merge that adds/changes a skill, command, agent, or hook needs a version
+bump**, or installed copies won't see it.
+
 ## Available Commands
 
 | Command | Purpose |
@@ -66,6 +97,8 @@ plugins/psters-ai-workflow/
 ├── hooks/
 │   ├── hooks.claude.json     # Claude Code hook configuration
 │   └── *.mjs                 # Hook scripts
+├── scripts/
+│   └── bump-version.mjs      # Sync version across plugin.json + marketplace.json
 └── assets/                   # Templates and supporting files
 ```
 
