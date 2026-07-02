@@ -9,7 +9,7 @@
 ### Included
 
 - **rules/**: commit conventions, markdown discipline, TypeORM migrations, Context7 documentation
-- **skills/**: commit orchestration, per-repo commit worker, NestJS/Angular conventions, AWS Lambda deploy, verification-before-completion, systematic-debugging (+ debug artifacts), using-psters-workflow, orchestrating-multi-agents, requesting-code-review, receiving-code-review, finishing-a-development-branch, test-driven-development (opt-in), git-worktree
+- **skills/**: commit orchestration, per-repo commit worker, NestJS/Angular conventions, AWS Lambda deploy, verification-before-completion, systematic-debugging (+ debug artifacts), using-psters-workflow, orchestrating-multi-agents, requesting-code-review, receiving-code-review, finishing-a-development-branch, test-driven-development (opt-in), git-worktree, ai-memory-usage (optional long-term memory over MCP)
 - **agents/**: full workflow agents — review (simplicity, security, architecture, schema-drift, performance, etc.), design, docs, research, workflow
 - **commands/**: `pwf-help`, `pwf-setup`, `pwf-setup-workspace`, `pwf-brainstorm`, `pwf-plan`, `pwf-clarify`, `pwf-checklist`, `pwf-analyze`, `pwf-work-plan`, `pwf-work`, `pwf-work-light`, `pwf-work-tdd`, `pwf-review`, `pwf-doc`, `pwf-doc-foundation`, `pwf-doc-runbook`, `pwf-doc-capture`, `pwf-doc-refresh`, `pwf-aws-lambda-deploy`, `pwf-commit-changes`
 - **presets/**: workflow presets (`general`, `nestjs-api`, `angular-feature`, `lambda-pipeline`, `bugfix-hotfix`)
@@ -143,7 +143,7 @@ Para validar prontidao de submissao:
 ### O que esta incluido
 
 - **rules/**: convencoes de commit, disciplina de markdown, migrations TypeORM, documentacao Context7, texto para usuario, AWS CLI
-- **skills/**: orquestracao de commits, worker por repositorio, convencoes NestJS/Angular, deploy de AWS Lambda, verification-before-completion, systematic-debugging (+ artefatos de debug), using-psters-workflow, orchestrating-multi-agents, requesting-code-review, receiving-code-review, finishing-a-development-branch, test-driven-development (opt-in), git-worktree
+- **skills/**: orquestracao de commits, worker por repositorio, convencoes NestJS/Angular, deploy de AWS Lambda, verification-before-completion, systematic-debugging (+ artefatos de debug), using-psters-workflow, orchestrating-multi-agents, requesting-code-review, receiving-code-review, finishing-a-development-branch, test-driven-development (opt-in), git-worktree, ai-memory-usage (memoria de longo prazo opcional via MCP)
 - **agents/**: suite completa de agentes — review (simplicidade, seguranca, arquitetura, schema-drift, performance etc.), design, docs, research, workflow
 - **commands/**: `pwf-help`, `pwf-setup`, `pwf-setup-workspace`, `pwf-brainstorm`, `pwf-plan`, `pwf-clarify`, `pwf-checklist`, `pwf-analyze`, `pwf-work-plan`, `pwf-work`, `pwf-work-light`, `pwf-work-tdd`, `pwf-review`, `pwf-doc`, `pwf-doc-foundation`, `pwf-doc-runbook`, `pwf-doc-capture`, `pwf-doc-refresh`, `pwf-aws-lambda-deploy`, `pwf-commit-changes`
 - **presets/**: presets de workflow (`general`, `nestjs-api`, `angular-feature`, `lambda-pipeline`, `bugfix-hotfix`)
