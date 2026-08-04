@@ -56,3 +56,19 @@ Hooks sao guardrails recomendados. Eles reforcam disciplina e lembretes, mas o f
 ## Esse workflow depende de linguagem/framework especifico?
 
 Nao. O workflow e agnostico de linguagem e framework.
+
+## Posso escolher em qual modelo os agentes do plugin rodam?
+
+Sim, no nivel da sessao. Nenhum agente do plugin (research, review, docs, workflow) fixa um
+`model` no frontmatter, entao a variavel de ambiente nativa do Claude Code
+`CLAUDE_CODE_SUBAGENT_MODEL` controla todos eles de uma vez:
+
+```bash
+export CLAUDE_CODE_SUBAGENT_MODEL="opus"   # ou "sonnet", "haiku", ou um model ID completo
+```
+
+Essa e uma troca global — ela muda todos os agentes da sessao, nao so os deste plugin, e o
+Claude Code nao tem forma nativa de fixar modelos diferentes por agente ou por categoria (ex:
+`review/` em Opus, `research/` em Haiku) sem adicionar manualmente o campo `model:` de volta
+nos arquivos de agente especificos. Veja o
+[CLAUDE.md do plugin Claude Code](../../plugins/psters-ai-workflow/CLAUDE.md) para detalhes.

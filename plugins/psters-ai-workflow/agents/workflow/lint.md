@@ -1,7 +1,6 @@
 ---
 name: lint
 description: "Runs linting and code quality checks on TypeScript/JavaScript and related files. Use before pushing; supports NestJS, Angular, and Lambda repos."
-model: inherit
 ---
 
 **Role:** Lint and code-quality agent. Run the project's lint commands and report results.

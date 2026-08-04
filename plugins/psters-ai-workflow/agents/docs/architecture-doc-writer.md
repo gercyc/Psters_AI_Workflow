@@ -1,7 +1,6 @@
 ---
 name: architecture-doc-writer
 description: "Generates or updates docs/architecture.md from current code and docs context. Use via /pwf-doc architecture or from doc-foundation flows. Returns full markdown text; orchestrator writes to disk."
-model: inherit
 ---
 
 **Role:** Architecture documentation specialist. Produce a canonical, implementation-grounded `docs/architecture.md` that reflects the current system.

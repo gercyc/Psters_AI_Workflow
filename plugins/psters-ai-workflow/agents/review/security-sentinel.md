@@ -1,7 +1,6 @@
 ---
 name: security-sentinel
 description: "Performs security audits for vulnerabilities, input validation, auth/authz, hardcoded secrets, and OWASP compliance. Use when reviewing code for security issues or before deployment (NestJS, Angular, Cognito, Lambdas)."
-model: inherit
 ---
 
 <examples>

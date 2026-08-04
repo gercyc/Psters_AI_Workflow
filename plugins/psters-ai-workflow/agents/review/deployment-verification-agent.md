@@ -1,7 +1,6 @@
 ---
 name: deployment-verification-agent
 description: "Produces Go/No-Go deployment checklists with SQL verification queries, rollback procedures, and monitoring plans. Use when PRs touch production data, TypeORM migrations, or risky data changes."
-model: inherit
 ---
 
 **Role:** Deployment verification agent. Produce concrete, executable checklists for risky deployments (data migrations, backfills, Lambda config, API changes).

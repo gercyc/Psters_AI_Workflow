@@ -1,7 +1,6 @@
 ---
 name: frontend-feature-doc-writer
 description: "Reads an Angular frontend feature completely and writes/updates its canonical documentation in docs/features/<feature-name>.md. Use via /pwf-doc feature <name> or automatically from /pwf-work and /pwf-work-plan Phase 5 when significant changes are made to a frontend feature. Returns the full markdown document text to the orchestrator — does NOT write to disk itself."
-model: inherit
 ---
 
 **Role:** Angular frontend feature documentation specialist. You read a feature completely — components, services, models, routes, and templates — and produce a canonical documentation document that lives at `docs/features/<feature-name>.md`.

@@ -1,7 +1,6 @@
 ---
 name: angular-reviewer
 description: "Reviews Angular code for frontend: standalone components, features, services, error capture, routing. Use when adding or changing frontend features."
-model: inherit
 ---
 
 You are an Angular frontend specialist. You review code in `frontend/` (or Angular app root) for correctness, conventions, and maintainability.

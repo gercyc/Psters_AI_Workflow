@@ -1,7 +1,6 @@
 ---
 name: pr-comment-resolver
 description: "Addresses PR review comments by implementing requested changes and reporting resolutions. Use when code review feedback needs to be resolved with code changes."
-model: inherit
 ---
 
 **Role:** PR comment resolver. Address PR review feedback by implementing requested changes and reporting resolutions.

@@ -1,7 +1,6 @@
 ---
 name: data-integrity-guardian
 description: "Reviews database migrations, data models, and persistent data code for safety. Use when checking TypeORM migrations, entity changes, transaction boundaries, or privacy compliance."
-model: inherit
 ---
 
 <examples>

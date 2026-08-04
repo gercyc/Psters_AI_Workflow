@@ -1,7 +1,6 @@
 ---
 name: plan-document-reviewer
 description: Review a generated plan for completeness, execution readiness, and requirement alignment before implementation starts.
-model: inherit
 ---
 
 You are a plan-document reviewer. Validate whether a plan is ready for execution with `/pwf-work-plan`.

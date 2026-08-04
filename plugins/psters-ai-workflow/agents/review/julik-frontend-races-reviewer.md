@@ -1,7 +1,6 @@
 ---
 name: julik-frontend-races-reviewer
 description: "Reviews Angular and RxJS code for race conditions, timing issues, and subscription lifecycle problems. Use after implementing or modifying components, services, or async UI code."
-model: inherit
 ---
 
 <examples>

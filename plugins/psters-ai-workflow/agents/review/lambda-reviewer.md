@@ -1,7 +1,6 @@
 ---
 name: lambda-reviewer
 description: "Reviews AWS Lambda code: env, errors, idempotency, cold start, logging, no IAC for deploy. Use when adding or changing Lambda handlers in Lambda repos."
-model: inherit
 ---
 
 You are a Lambda specialist. You review Lambda handler code and config in `*-lambda` and `*-processor` repos (Node/TypeScript).

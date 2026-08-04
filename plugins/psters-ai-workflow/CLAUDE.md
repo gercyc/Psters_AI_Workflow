@@ -102,6 +102,38 @@ plugins/psters-ai-workflow/
 └── assets/                   # Templates and supporting files
 ```
 
+## Configuring the Model Used by Agents
+
+All subagents shipped by this plugin (`agents/**/*.md`) ship **without** a `model` field in
+their frontmatter, so each one falls back to Claude Code's default resolution order:
+
+```
+env var (CLAUDE_CODE_SUBAGENT_MODEL) → per-invocation param → frontmatter → session model
+```
+
+Because none of the 44 agents pin a model in frontmatter, the session model is used by default —
+same as before. To make every agent in this plugin use a different model without editing any
+file, set the official Claude Code environment variable before starting a session:
+
+```bash
+export CLAUDE_CODE_SUBAGENT_MODEL="opus"      # or "sonnet", "haiku", or a full model ID
+```
+
+```powershell
+$env:CLAUDE_CODE_SUBAGENT_MODEL = "opus"
+```
+
+Notes:
+
+- This switches **all** agents in the session at once (not just this plugin's) — Claude Code has
+  no native per-agent or per-plugin model mapping today.
+- Prefer the short aliases `opus` / `sonnet` / `haiku` or a full model ID (e.g.
+  `claude-opus-5`); some abbreviated names have had resolution issues on older CLI versions.
+- If you need different models for different agent categories (e.g. `review/` on Opus,
+  `research/` on Haiku), the only way today is to add an explicit `model:` field back into the
+  specific agent files you want pinned — this plugin intentionally leaves them unset so the env
+  var can do the job for the common case.
+
 ## Key Conventions
 
 - Commands follow `rules/operational-guardrails.mdc`.

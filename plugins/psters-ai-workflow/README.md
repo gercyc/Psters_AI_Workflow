@@ -108,6 +108,20 @@ This plugin includes `mcp.json` with a Context7 MCP server setup.
 
 Use this flow whenever implementation depends on external library/framework docs.
 
+### Choosing which model the agents run on
+
+None of this plugin's agents (`agents/**/*.md`) pin a `model` in their frontmatter, so Claude
+Code's native `CLAUDE_CODE_SUBAGENT_MODEL` environment variable controls which model every one
+of them runs on:
+
+```bash
+export CLAUDE_CODE_SUBAGENT_MODEL="opus"   # or "sonnet", "haiku", or a full model ID
+```
+
+This is a global switch for the whole session (not just this plugin), since Claude Code has no
+native per-agent or per-category model mapping today. See the [plugin CLAUDE.md](CLAUDE.md) for
+the full explanation and limitations.
+
 ---
 
 <a id="plugin-explicado-portugues-pt-br"></a>
@@ -241,3 +255,17 @@ Este plugin inclui `mcp.json` com configuracao do servidor Context7 MCP.
 - Regra de referencia: `rules/context7-documentation.mdc`
 
 Use esse fluxo sempre que a implementacao depender de docs de bibliotecas/frameworks externos.
+
+### Escolhendo em qual modelo os agentes rodam
+
+Nenhum agente deste plugin (`agents/**/*.md`) fixa um `model` no frontmatter, entao a variavel
+de ambiente nativa do Claude Code `CLAUDE_CODE_SUBAGENT_MODEL` controla em qual modelo cada um
+deles roda:
+
+```bash
+export CLAUDE_CODE_SUBAGENT_MODEL="opus"   # ou "sonnet", "haiku", ou um model ID completo
+```
+
+Essa e uma troca global para toda a sessao (nao so para este plugin), ja que o Claude Code nao
+tem hoje mapeamento nativo de modelo por agente ou por categoria. Veja o
+[CLAUDE.md do plugin](CLAUDE.md) para a explicacao completa e as limitacoes.

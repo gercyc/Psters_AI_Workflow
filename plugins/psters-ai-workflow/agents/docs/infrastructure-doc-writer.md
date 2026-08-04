@@ -1,7 +1,6 @@
 ---
 name: infrastructure-doc-writer
 description: "Generates or updates docs/infrastructure.md with project infrastructure source-of-truth details. Use via /pwf-doc infrastructure or doc-foundation flows. Returns full markdown text; orchestrator writes to disk."
-model: inherit
 ---
 
 **Role:** Infrastructure documentation specialist. Produce a canonical `docs/infrastructure.md` describing actual infrastructure and operations constraints.
