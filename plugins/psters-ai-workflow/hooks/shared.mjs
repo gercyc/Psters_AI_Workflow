@@ -1,5 +1,5 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { dirname, resolve } from "node:path";
+import { dirname, isAbsolute, relative, resolve } from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
 
@@ -41,6 +41,66 @@ export function readStdin() {
     });
     process.stdin.on("end", () => resolveInput(data));
   });
+}
+
+// Hook clients send different payload shapes:
+//   - Cursor:         flat fields (command, file_path, conversation_id)
+//   - Claude Code:    session_id + tool_name + tool_input { command, file_path }
+//   - GitHub Copilot: sessionId + toolName + toolArgs { command, path } (object or JSON string)
+// Flatten them into the Cursor-style shape the inner hooks already read.
+function parseToolArgs(rawValue) {
+  if (rawValue && typeof rawValue === "object") {
+    return rawValue;
+  }
+  if (typeof rawValue === "string") {
+    return safeParseJson(rawValue);
+  }
+  return {};
+}
+
+function toProjectRelative(filePath, cwd) {
+  if (typeof filePath !== "string" || typeof cwd !== "string" || !isAbsolute(filePath)) {
+    return filePath;
+  }
+  const rel = relative(cwd, filePath);
+  return rel && !rel.startsWith("..") && !isAbsolute(rel) ? rel : filePath;
+}
+
+export function normalizeHookPayload(payload) {
+  const toolArgs = parseToolArgs(payload.tool_input ?? payload.toolArgs);
+  const filePath = payload.file_path ?? toolArgs.file_path ?? toolArgs.path ?? payload.path;
+  return {
+    ...toolArgs,
+    ...payload,
+    session_id: payload.session_id ?? payload.sessionId ?? payload.conversation_id,
+    tool_name: payload.tool_name ?? payload.toolName,
+    command: payload.command ?? toolArgs.command,
+    file_path: toProjectRelative(filePath, payload.cwd)
+  };
+}
+
+export function isCopilotClient() {
+  return process.env.PSTERS_HOOK_CLIENT === "copilot";
+}
+
+// Tool-level reminder. Copilot only surfaces hook output to the model through
+// postToolUse `additionalContext`; Claude Code / Cursor keep the stderr nudge.
+export function emitReminder(message) {
+  if (isCopilotClient()) {
+    process.stdout.write(JSON.stringify({ additionalContext: message }));
+    return;
+  }
+  console.error(message);
+  process.stdout.write("{}");
+}
+
+// End-of-turn follow-up. Cursor's `followup_message` maps to Copilot's
+// agentStop `decision: "block"`, which sends `reason` back to the agent.
+export function emitFollowup(message) {
+  const output = isCopilotClient()
+    ? { decision: "block", reason: message }
+    : { followup_message: message };
+  process.stdout.write(JSON.stringify(output));
 }
 
 export function sanitizeSessionId(rawValue) {

@@ -91,6 +91,15 @@ Deep dive:
    - `/pwf-help` (quick orientation)
    - `/pwf-brainstorm` or `/pwf-work` (first real task)
 
+Using GitHub Copilot CLI? Install from this repository's marketplace:
+
+```bash
+copilot plugin marketplace add gercyc/Psters_AI_Workflow
+copilot plugin install psters-ai-workflow@psters-marketplace
+```
+
+See [`plugins/psters-ai-workflow/COPILOT_README.md`](plugins/psters-ai-workflow/COPILOT_README.md) for what is supported and how hooks are mapped.
+
 ### 2) If your project is NEW
 
 Recommended setup:
@@ -297,6 +306,15 @@ Aprofundar:
 3. Comece com:
    - `/pwf-help` (orientação rápida)
    - `/pwf-brainstorm` ou `/pwf-work` (primeira task real)
+
+Usando o GitHub Copilot CLI? Instale pelo marketplace deste repositório:
+
+```bash
+copilot plugin marketplace add gercyc/Psters_AI_Workflow
+copilot plugin install psters-ai-workflow@psters-marketplace
+```
+
+Veja [`plugins/psters-ai-workflow/COPILOT_README.md`](plugins/psters-ai-workflow/COPILOT_README.md) para o que é suportado e como os hooks são mapeados.
 
 ### 2) Se o projeto for NOVO
 

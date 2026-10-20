@@ -1,9 +1,14 @@
 // psters-ai-workflow hook dispatcher.
 //
-// Single entry point registered in hooks.claude.json. Receives the Claude
-// Code hook payload via stdin, routes to the right inner hook based on the
-// PSTERS_HOOK_NAME env var (set by hooks.claude.json per matcher), and
-// respects the per-hook enable/disable toggle in config.json.
+// Single entry point registered in hooks.claude.json (Claude Code) and
+// hooks.copilot.json (GitHub Copilot). Receives the hook payload via stdin,
+// normalizes it to one shape, routes to the right inner hook based on the
+// PSTERS_HOOK_NAME env var, and respects the per-hook enable/disable toggle
+// in config.json.
+//
+// PSTERS_TOOL_MATCH (optional regex) filters by tool name for clients whose
+// camelCase events have no per-entry matcher (Copilot fires every postToolUse
+// hook for every tool).
 //
 // Why a dispatcher?
 //   - One JSON entry per matcher, so the plugin can never accidentally
@@ -20,7 +25,7 @@ import { dirname, resolve } from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
 
-import { readStdin } from "./shared.mjs";
+import { normalizeHookPayload, readStdin, safeParseJson } from "./shared.mjs";
 
 const HOOKS_DIR = dirname(fileURLToPath(import.meta.url));
 const CONFIG_PATH = resolve(HOOKS_DIR, "config.json");
@@ -41,6 +46,18 @@ function isEnabled(hookName, config) {
     return true; // unknown hooks default to enabled
   }
   return entry.enabled !== false;
+}
+
+function matchesTool(toolName) {
+  const pattern = process.env.PSTERS_TOOL_MATCH;
+  if (!pattern) {
+    return true;
+  }
+  try {
+    return new RegExp(pattern, "i").test(String(toolName || ""));
+  } catch {
+    return false;
+  }
 }
 
 async function runInnerHook(hookName, stdinPayload) {
@@ -67,10 +84,15 @@ async function main() {
     process.stdout.write("{}");
     return;
   }
-  const stdinPayload = await readStdin().catch(() => "");
+  const stdinText = await readStdin().catch(() => "");
+  const payload = normalizeHookPayload(safeParseJson(stdinText));
+  if (!matchesTool(payload.tool_name)) {
+    process.stdout.write("{}");
+    return;
+  }
   // Inner hook emits its own JSON to stdout (via inherit). No need to
   // re-emit {} here — that would produce duplicate payloads.
-  await runInnerHook(hookName, stdinPayload);
+  await runInnerHook(hookName, JSON.stringify(payload));
 }
 
 main().catch(() => {

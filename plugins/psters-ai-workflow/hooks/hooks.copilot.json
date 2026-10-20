@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "hooks": {
+    "postToolUse": [
+      {
+        "type": "command",
+        "command": "node \"${PLUGIN_ROOT}/hooks/dispatcher.mjs\"",
+        "env": {
+          "PSTERS_HOOK_NAME": "track-edit",
+          "PSTERS_HOOK_CLIENT": "copilot",
+          "PSTERS_TOOL_MATCH": "^(edit|create)$"
+        },
+        "timeoutSec": 10
+      },
+      {
+        "type": "command",
+        "command": "node \"${PLUGIN_ROOT}/hooks/dispatcher.mjs\"",
+        "env": {
+          "PSTERS_HOOK_NAME": "migration-atomic-reminder",
+          "PSTERS_HOOK_CLIENT": "copilot",
+          "PSTERS_TOOL_MATCH": "^(bash|powershell)$"
+        },
+        "timeoutSec": 10
+      },
+      {
+        "type": "command",
+        "command": "node \"${PLUGIN_ROOT}/hooks/dispatcher.mjs\"",
+        "env": {
+          "PSTERS_HOOK_NAME": "commit-convention-reminder",
+          "PSTERS_HOOK_CLIENT": "copilot",
+          "PSTERS_TOOL_MATCH": "^(bash|powershell)$"
+        },
+        "timeoutSec": 10
+      }
+    ],
+    "agentStop": [
+      {
+        "type": "command",
+        "command": "node \"${PLUGIN_ROOT}/hooks/dispatcher.mjs\"",
+        "env": {
+          "PSTERS_HOOK_NAME": "doc-guard-stop",
+          "PSTERS_HOOK_CLIENT": "copilot"
+        },
+        "timeoutSec": 10
+      }
+    ]
+  }
+}
