@@ -29,6 +29,8 @@ import { normalizeHookPayload, readStdin, safeParseJson } from "./shared.mjs";
 
 const HOOKS_DIR = dirname(fileURLToPath(import.meta.url));
 const CONFIG_PATH = resolve(HOOKS_DIR, "config.json");
+// Hook names map to sibling `<name>.mjs` files; reject anything path-like.
+const HOOK_NAME_RE = /^[a-z0-9-]+$/;
 
 function loadConfig() {
   try {
@@ -73,9 +75,23 @@ async function runInnerHook(hookName, stdinPayload) {
   });
 }
 
+// Codex hook handlers have no `env` field, so hooks.codex.json passes the
+// hook name and client as arguments: `dispatcher.mjs <hook-name> [client]`.
+// The values are copied into the env so the forked inner hook sees them.
+function applyArgvOverrides() {
+  const [hookName, client] = process.argv.slice(2);
+  if (hookName) {
+    process.env.PSTERS_HOOK_NAME = hookName;
+  }
+  if (client) {
+    process.env.PSTERS_HOOK_CLIENT = client;
+  }
+}
+
 async function main() {
+  applyArgvOverrides();
   const hookName = process.env.PSTERS_HOOK_NAME;
-  if (!hookName) {
+  if (!hookName || !HOOK_NAME_RE.test(hookName)) {
     process.stdout.write("{}");
     return;
   }

@@ -2,10 +2,11 @@
 /**
  * Bump the psters-ai-workflow plugin version.
  *
- * Keeps the version in sync across the manifests read by Claude Code and GitHub Copilot:
+ * Keeps the version in sync across the manifests read by Claude Code, GitHub Copilot and Codex:
  *   - plugins/psters-ai-workflow/.claude-plugin/plugin.json  (Claude Code plugin manifest)
  *   - plugins/psters-ai-workflow/.github/plugin/plugin.json  (GitHub Copilot plugin manifest)
- *   - .claude-plugin/marketplace.json                        (git marketplace entry, read by both)
+ *   - plugins/psters-ai-workflow/.codex-plugin/plugin.json   (Codex plugin manifest)
+ *   - .claude-plugin/marketplace.json                        (git marketplace entry, read by all three)
  *
  * If these diverge, `/plugin update` can fail to detect a new release, so this
  * script is the single source of truth for bumping.
@@ -32,6 +33,7 @@ const repoRoot = resolve(pluginRoot, '..', '..');
 
 const pluginManifestPath = resolve(pluginRoot, '.claude-plugin', 'plugin.json');
 const copilotManifestPath = resolve(pluginRoot, '.github', 'plugin', 'plugin.json');
+const codexManifestPath = resolve(pluginRoot, '.codex-plugin', 'plugin.json');
 const marketplacePath = resolve(repoRoot, '.claude-plugin', 'marketplace.json');
 
 function parseArgs(argv) {
@@ -82,6 +84,7 @@ async function main() {
 
   const pluginManifest = await readJson(pluginManifestPath);
   const copilotManifest = await readJson(copilotManifestPath);
+  const codexManifest = await readJson(codexManifestPath);
   const marketplace = await readJson(marketplacePath);
 
   const current = pluginManifest.version;
@@ -91,10 +94,15 @@ async function main() {
   }
 
   // Guard: all manifests must already agree before we bump.
-  if (marketplaceEntry.version !== current || copilotManifest.version !== current) {
+  if (
+    marketplaceEntry.version !== current ||
+    copilotManifest.version !== current ||
+    codexManifest.version !== current
+  ) {
     throw new Error(
       `Version mismatch before bump: plugin.json=${current}, .github/plugin/plugin.json=${copilotManifest.version}, ` +
-        `marketplace.json=${marketplaceEntry.version}. Reconcile them first.`,
+        `.codex-plugin/plugin.json=${codexManifest.version}, marketplace.json=${marketplaceEntry.version}. ` +
+        `Reconcile them first.`,
     );
   }
 
@@ -110,20 +118,22 @@ async function main() {
     console.log('  would update:');
     console.log(`    - ${pluginManifestPath}`);
     console.log(`    - ${copilotManifestPath}`);
+    console.log(`    - ${codexManifestPath}`);
     console.log(`    - ${marketplacePath}`);
     return;
   }
 
   await setVersionInFile(pluginManifestPath, current, target);
   await setVersionInFile(copilotManifestPath, current, target);
+  await setVersionInFile(codexManifestPath, current, target);
   await setVersionInFile(marketplacePath, current, target);
 
-  console.log('  updated both plugin.json manifests and marketplace.json');
+  console.log('  updated all plugin.json manifests and marketplace.json');
   console.log('');
   console.log('Next steps:');
-  console.log(`  git add plugins/${PLUGIN_NAME}/.claude-plugin/plugin.json plugins/${PLUGIN_NAME}/.github/plugin/plugin.json .claude-plugin/marketplace.json`);
+  console.log(`  git add plugins/${PLUGIN_NAME}/.claude-plugin/plugin.json plugins/${PLUGIN_NAME}/.github/plugin/plugin.json plugins/${PLUGIN_NAME}/.codex-plugin/plugin.json .claude-plugin/marketplace.json`);
   console.log(`  git commit -m "chore(release): v${target}"`);
-  console.log('  # open a PR, merge, then in Claude Code: /plugin update ' + PLUGIN_NAME + ' | Copilot: copilot plugin update ' + PLUGIN_NAME);
+  console.log('  # open a PR, merge, then in Claude Code: /plugin update ' + PLUGIN_NAME + ' | Copilot: copilot plugin update ' + PLUGIN_NAME + ' | Codex: codex plugin marketplace upgrade');
 }
 
 main().catch((err) => {

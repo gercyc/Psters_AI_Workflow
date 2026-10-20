@@ -30,12 +30,17 @@ must stay in sync across all manifests:
 
 - `plugins/psters-ai-workflow/.claude-plugin/plugin.json` (Claude Code plugin manifest)
 - `plugins/psters-ai-workflow/.github/plugin/plugin.json` (GitHub Copilot plugin manifest — see `COPILOT_README.md`)
-- `.claude-plugin/marketplace.json` (marketplace entry, read by both Claude Code and Copilot)
+- `plugins/psters-ai-workflow/.codex-plugin/plugin.json` (Codex plugin manifest — see `CODEX_README.md`)
+- `.claude-plugin/marketplace.json` (marketplace entry, read by Claude Code, Copilot and Codex)
 
-When adding or removing an agent, update the `agents` list in **both** plugin manifests
-(`tests/manifests/copilot-manifest.test.mjs` fails if they diverge).
+When adding or removing an agent, update the `agents` list in the Claude Code and Copilot
+manifests (`tests/manifests/copilot-manifest.test.mjs` fails if they diverge). Codex has no
+agent list; it reaches agents through `codex/skills/psters-agents/SKILL.md`.
 
-**Always bump via the script** — it updates all three files together and refuses to run if they
+When adding a hook, register it in `hooks.claude.json`, `hooks.copilot.json` and
+`hooks.codex.json` (the manifest tests check the Copilot and Codex files against `hooks/config.json`).
+
+**Always bump via the script** — it updates all four files together and refuses to run if they
 have drifted apart:
 
 ```bash

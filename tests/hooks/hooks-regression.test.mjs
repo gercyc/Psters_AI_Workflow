@@ -263,3 +263,130 @@ test("claude: absolute tool_input.file_path is stored relative to cwd", () => {
     rmSync(pluginRoot, { recursive: true, force: true });
   }
 });
+
+function runCodexHook(hookName, payload, envOverrides = {}) {
+  return spawnSync("node", [join(HOOKS_DIR, "dispatcher.mjs"), hookName, "codex"], {
+    input: JSON.stringify(payload),
+    encoding: "utf8",
+    env: { ...process.env, PSTERS_HOOK_NAME: "", PSTERS_HOOK_CLIENT: "", ...envOverrides }
+  });
+}
+
+test("codex: PreToolUse commit reminder uses hookSpecificOutput.additionalContext", () => {
+  const result = runCodexHook("commit-convention-reminder", {
+    session_id: "codex-1",
+    hook_event_name: "PreToolUse",
+    tool_name: "Bash",
+    tool_input: { command: ["bash", "-lc", 'git commit -m "fix: x"'] }
+  });
+  assert.equal(result.status, 0);
+  const output = JSON.parse(result.stdout);
+  assert.equal(output.hookSpecificOutput.hookEventName, "PreToolUse");
+  assert.match(output.hookSpecificOutput.additionalContext, /Commit reminder/);
+});
+
+test("codex: apply_patch edits count every file in the patch", () => {
+  const pluginRoot = mkdtempSync(join(tmpdir(), "psters-hook-codex-"));
+  const cwd = join(tmpdir(), "codex-project");
+  const env = { CURSOR_PLUGIN_ROOT: pluginRoot };
+  const patch = [
+    "*** Begin Patch",
+    `*** Add File: ${join(cwd, "src", "app.ts")}`,
+    "+export const x = 1;",
+    "*** Update File: docs/guide.md",
+    "@@",
+    "-a",
+    "+b",
+    "*** End Patch"
+  ].join("\n");
+  try {
+    const edit = runCodexHook(
+      "track-edit",
+      {
+        session_id: "codex-2",
+        cwd,
+        hook_event_name: "PostToolUse",
+        tool_name: "apply_patch",
+        tool_input: { command: patch }
+      },
+      env
+    );
+    assert.equal(edit.status, 0);
+
+    const statePath = join(pluginRoot, ".cursor", "hooks", "state", "psters-ai-workflow.json");
+    const session = JSON.parse(readFileSync(statePath, "utf8")).sessions["codex-2"];
+    assert.deepEqual(session.touched, ["src/app.ts", "docs/guide.md"]);
+    assert.equal(session.codeEdits, 1);
+    assert.equal(session.docEdits, 1);
+
+    const stop = runCodexHook("doc-guard-stop", { session_id: "codex-2", hook_event_name: "Stop" }, env);
+    assert.equal(stop.stdout.trim(), "{}");
+  } finally {
+    rmSync(pluginRoot, { recursive: true, force: true });
+  }
+});
+
+test("codex: Stop blocks once with a documentation reason when docs were skipped", () => {
+  const pluginRoot = mkdtempSync(join(tmpdir(), "psters-hook-codex-stop-"));
+  const env = { CURSOR_PLUGIN_ROOT: pluginRoot };
+  try {
+    runCodexHook(
+      "track-edit",
+      {
+        session_id: "codex-3",
+        tool_name: "apply_patch",
+        tool_input: { command: "*** Begin Patch\n*** Update File: src/a.ts\n*** End Patch" }
+      },
+      env
+    );
+    const stop = runCodexHook("doc-guard-stop", { session_id: "codex-3", hook_event_name: "Stop" }, env);
+    const output = JSON.parse(stop.stdout);
+    assert.equal(output.decision, "block");
+    assert.match(output.reason, /Documentation guard/);
+  } finally {
+    rmSync(pluginRoot, { recursive: true, force: true });
+  }
+});
+
+test("dispatcher rejects path-like hook names", () => {
+  const result = runCodexHook("../hooks/track-edit", { session_id: "x" });
+  assert.equal(result.status, 0);
+  assert.equal(result.stdout.trim(), "{}");
+});
+
+test("codex: CRLF patches, renames and repeated paths are tracked once per final file", () => {
+  const pluginRoot = mkdtempSync(join(tmpdir(), "psters-hook-codex-move-"));
+  const patch = [
+    "*** Begin Patch",
+    "*** Update File: src/old.ts",
+    "*** Move to: src/new.ts",
+    "@@",
+    "*** Update File: src/new.ts",
+    "@@",
+    "*** End Patch"
+  ].join("\r\n");
+  try {
+    runCodexHook(
+      "track-edit",
+      { session_id: "codex-move", tool_name: "apply_patch", tool_input: { command: patch } },
+      { CURSOR_PLUGIN_ROOT: pluginRoot }
+    );
+    const statePath = join(pluginRoot, ".cursor", "hooks", "state", "psters-ai-workflow.json");
+    const session = JSON.parse(readFileSync(statePath, "utf8")).sessions["codex-move"];
+    assert.deepEqual(session.touched, ["src/new.ts"]);
+    assert.equal(session.codeEdits, 1);
+  } finally {
+    rmSync(pluginRoot, { recursive: true, force: true });
+  }
+});
+
+test("codex: patch text inside a Bash command is not treated as file edits", () => {
+  const result = runCodexHook("commit-convention-reminder", {
+    session_id: "codex-heredoc",
+    hook_event_name: "PreToolUse",
+    tool_name: "Bash",
+    tool_input: { command: "cat <<EOF\n*** Begin Patch\n*** Update File: src/a.ts\n*** End Patch\nEOF" }
+  });
+  assert.equal(result.status, 0);
+  assert.equal(result.stdout.trim(), "{}");
+});

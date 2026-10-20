@@ -27,7 +27,8 @@ async function main() {
 
   if (!hasTicketPrefix) {
     emitReminder(
-      "[psters-ai-workflow hook] Commit reminder: prefer `[TICKET-XXXX] <type>(<scope>): <subject>`; use `/pwf-commit-changes` for structured commits."
+      "[psters-ai-workflow hook] Commit reminder: prefer `[TICKET-XXXX] <type>(<scope>): <subject>`; use `/pwf-commit-changes` for structured commits.",
+      payload.hook_event_name
     );
     return;
   }

@@ -46,6 +46,7 @@ export function readStdin() {
 // Hook clients send different payload shapes:
 //   - Cursor:         flat fields (command, file_path, conversation_id)
 //   - Claude Code:    session_id + tool_name + tool_input { command, file_path }
+//   - Codex:          Claude Code shape; apply_patch sends the patch in tool_input.command
 //   - GitHub Copilot: sessionId + toolName + toolArgs { command, path } (object or JSON string)
 // Flatten them into the Cursor-style shape the inner hooks already read.
 function parseToolArgs(rawValue) {
@@ -66,40 +67,83 @@ function toProjectRelative(filePath, cwd) {
   return rel && !rel.startsWith("..") && !isAbsolute(rel) ? rel : filePath;
 }
 
+// Codex shell calls may send the command as an argv array.
+function commandToString(rawValue) {
+  return Array.isArray(rawValue) ? rawValue.join(" ") : rawValue;
+}
+
+// Codex edits files through `apply_patch`, sending the patch text in
+// tool_input.command; one patch can touch several files.
+// `Move to:` renames the preceding `Update File:`, so it replaces that path.
+const PATCH_FILE_RE = /^\*\*\* (Add File|Update File|Delete File|Move to): (.+)$/gm;
+
+function patchFilePaths(toolName, command) {
+  if (toolName !== "apply_patch" || typeof command !== "string") {
+    return [];
+  }
+  const paths = [];
+  for (const [, action, rawPath] of command.matchAll(PATCH_FILE_RE)) {
+    if (action === "Move to" && paths.length > 0) {
+      paths.pop();
+    }
+    paths.push(rawPath.trim());
+  }
+  return [...new Set(paths)];
+}
+
 export function normalizeHookPayload(payload) {
   const toolArgs = parseToolArgs(payload.tool_input ?? payload.toolArgs);
-  const filePath = payload.file_path ?? toolArgs.file_path ?? toolArgs.path ?? payload.path;
+  const toolName = payload.tool_name ?? payload.toolName;
+  const command = commandToString(payload.command ?? toolArgs.command);
+  const filePaths = (payload.file_paths ?? patchFilePaths(toolName, command)).map((filePath) =>
+    toProjectRelative(filePath, payload.cwd)
+  );
+  const filePath =
+    payload.file_path ?? toolArgs.file_path ?? toolArgs.path ?? payload.path ?? filePaths[0];
   return {
     ...toolArgs,
     ...payload,
     session_id: payload.session_id ?? payload.sessionId ?? payload.conversation_id,
-    tool_name: payload.tool_name ?? payload.toolName,
-    command: payload.command ?? toolArgs.command,
-    file_path: toProjectRelative(filePath, payload.cwd)
+    tool_name: toolName,
+    command,
+    file_path: toProjectRelative(filePath, payload.cwd),
+    file_paths: filePaths
   };
 }
 
-export function isCopilotClient() {
-  return process.env.PSTERS_HOOK_CLIENT === "copilot";
+export function hookClient() {
+  return process.env.PSTERS_HOOK_CLIENT || "claude";
 }
 
-// Tool-level reminder. Copilot only surfaces hook output to the model through
-// postToolUse `additionalContext`; Claude Code / Cursor keep the stderr nudge.
-export function emitReminder(message) {
-  if (isCopilotClient()) {
+// Tool-level reminder, delivered where each client shows it to the model:
+//   - Copilot: postToolUse `additionalContext`
+//   - Codex:   `hookSpecificOutput.additionalContext` (PreToolUse / PostToolUse)
+//   - Claude Code / Cursor: stderr nudge
+export function emitReminder(message, hookEventName = "PostToolUse") {
+  const client = hookClient();
+  if (client === "copilot") {
     process.stdout.write(JSON.stringify({ additionalContext: message }));
+    return;
+  }
+  if (client === "codex") {
+    process.stdout.write(
+      JSON.stringify({ hookSpecificOutput: { hookEventName, additionalContext: message } })
+    );
     return;
   }
   console.error(message);
   process.stdout.write("{}");
 }
 
-// End-of-turn follow-up. Cursor's `followup_message` maps to Copilot's
-// agentStop `decision: "block"`, which sends `reason` back to the agent.
+// End-of-turn follow-up. Cursor's `followup_message` maps to the Copilot
+// agentStop / Codex Stop `decision: "block"`, which sends `reason` back to
+// the agent as a new prompt.
 export function emitFollowup(message) {
-  const output = isCopilotClient()
-    ? { decision: "block", reason: message }
-    : { followup_message: message };
+  const client = hookClient();
+  const output =
+    client === "copilot" || client === "codex"
+      ? { decision: "block", reason: message }
+      : { followup_message: message };
   process.stdout.write(JSON.stringify(output));
 }
 

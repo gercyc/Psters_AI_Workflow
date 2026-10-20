@@ -108,7 +108,7 @@ Detalhes:
 
 ### Versão
 
-`scripts/bump-version.mjs` atualiza os dois `plugin.json` e o `marketplace.json` juntos, e recusa rodar se estiverem divergentes.
+`scripts/bump-version.mjs` atualiza todos os `plugin.json` (Claude Code, Copilot e Codex) e o `marketplace.json` juntos, e recusa rodar se estiverem divergentes.
 
 ---
 
