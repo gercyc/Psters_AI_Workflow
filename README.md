@@ -100,6 +100,15 @@ copilot plugin install psters-ai-workflow@psters-marketplace
 
 See [`plugins/psters-ai-workflow/COPILOT_README.md`](plugins/psters-ai-workflow/COPILOT_README.md) for what is supported and how hooks are mapped.
 
+Using Codex (OpenAI)? Same marketplace:
+
+```bash
+codex plugin marketplace add gercyc/Psters_AI_Workflow
+codex plugin add psters-ai-workflow@psters-marketplace
+```
+
+See [`plugins/psters-ai-workflow/CODEX_README.md`](plugins/psters-ai-workflow/CODEX_README.md) (hooks must be trusted once in `/hooks`).
+
 ### 2) If your project is NEW
 
 Recommended setup:
@@ -315,6 +324,15 @@ copilot plugin install psters-ai-workflow@psters-marketplace
 ```
 
 Veja [`plugins/psters-ai-workflow/COPILOT_README.md`](plugins/psters-ai-workflow/COPILOT_README.md) para o que é suportado e como os hooks são mapeados.
+
+Usando o Codex (OpenAI)? Mesmo marketplace:
+
+```bash
+codex plugin marketplace add gercyc/Psters_AI_Workflow
+codex plugin add psters-ai-workflow@psters-marketplace
+```
+
+Veja [`plugins/psters-ai-workflow/CODEX_README.md`](plugins/psters-ai-workflow/CODEX_README.md) (os hooks precisam ser confiados uma vez em `/hooks`).
 
 ### 2) Se o projeto for NOVO
 

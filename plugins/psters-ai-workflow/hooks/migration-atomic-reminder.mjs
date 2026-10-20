@@ -18,7 +18,8 @@ async function main() {
 
   if (isGenerate) {
     emitReminder(
-      "[psters-ai-workflow hook] TypeORM atomic chain reminder: generate -> drift-check -> run locally immediately."
+      "[psters-ai-workflow hook] TypeORM atomic chain reminder: generate -> drift-check -> run locally immediately.",
+      payload.hook_event_name
     );
     return;
   }

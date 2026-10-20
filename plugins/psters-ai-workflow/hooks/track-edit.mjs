@@ -21,6 +21,13 @@ function pickFilePath(payload) {
   );
 }
 
+// A Codex apply_patch can touch several files; other clients send one.
+// An edit with no recognizable path still counts once, as before.
+function pickFilePaths(payload) {
+  const fromPatch = (payload.file_paths || []).map(sanitizeFilePath).filter(Boolean);
+  return fromPatch.length > 0 ? fromPatch : [pickFilePath(payload)];
+}
+
 function isDocPath(filePath) {
   if (!filePath) {
     return false;
@@ -38,7 +45,7 @@ async function main() {
   const stdin = await readStdin();
   const payload = normalizeHookPayload(safeParseJson(stdin));
   const sessionId = sanitizeSessionId(payload.session_id || payload.conversation_id || "global");
-  const filePath = pickFilePath(payload);
+  const filePaths = pickFilePaths(payload);
 
   const state = loadJsonState(STATE_PATH, { version: 1, sessions: {} });
   if (!state.sessions[sessionId]) {
@@ -46,23 +53,25 @@ async function main() {
   }
 
   const session = state.sessions[sessionId];
-  if (isDocPath(filePath)) {
-    session.docEdits += 1;
-  } else {
-    session.codeEdits += 1;
-  }
-  if (filePath && !session.touched.includes(filePath)) {
-    session.touched.push(filePath);
-    session.touched = session.touched.slice(-20);
+  for (const filePath of filePaths) {
+    if (isDocPath(filePath)) {
+      session.docEdits += 1;
+    } else {
+      session.codeEdits += 1;
+    }
+    if (filePath && !session.touched.includes(filePath)) {
+      session.touched.push(filePath);
+      session.touched = session.touched.slice(-20);
+    }
+    logTelemetry("afterFileEdit", {
+      sessionId,
+      isDoc: isDocPath(filePath),
+      filePath
+    });
   }
 
   state.updatedAt = Date.now();
   saveJsonState(STATE_PATH, state);
-  logTelemetry("afterFileEdit", {
-    sessionId,
-    isDoc: isDocPath(filePath),
-    filePath
-  });
 
   process.stdout.write("{}");
 }

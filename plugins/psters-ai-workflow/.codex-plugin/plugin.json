@@ -1,0 +1,36 @@
+{
+  "name": "psters-ai-workflow",
+  "version": "1.0.3",
+  "description": "Daily AI development workflow with planning, execution, review, and commit conventions.",
+  "author": {
+    "name": "Gercy Campos"
+  },
+  "homepage": "https://github.com/gercyc/Psters_AI_Workflow",
+  "repository": "https://github.com/gercyc/Psters_AI_Workflow",
+  "license": "MIT",
+  "keywords": ["workflow", "ai", "planning", "review", "commits", "codex"],
+  "skills": [
+    "./skills/",
+    "./codex/skills/"
+  ],
+  "commands": [],
+  "mcpServers": "./mcp.json",
+  "hooks": "./hooks/hooks.codex.json",
+  "interface": {
+    "displayName": "Psters AI Workflow",
+    "shortDescription": "Plan, execute, review, and document work with a disciplined AI workflow",
+    "longDescription": "Structured development workflow: brainstorm, plan, execute phases, review with specialist agents, keep docs current, and commit with ticket conventions.",
+    "developerName": "Gercy Campos",
+    "category": "Coding",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/gercyc/Psters_AI_Workflow",
+    "defaultPrompt": [
+      "Explain the Psters workflow commands with the pwf-help skill.",
+      "Use the pwf-brainstorm skill to explore a new feature before planning."
+    ],
+    "logo": "./assets/logo.svg"
+  }
+}
