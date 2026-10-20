@@ -26,12 +26,16 @@ Claude Code installs and updates the plugin directly from GitHub:
 ```
 
 `/plugin update` only detects a new release when the **version changes**, and the version
-must stay in sync across BOTH manifests:
+must stay in sync across all manifests:
 
-- `plugins/psters-ai-workflow/.claude-plugin/plugin.json` (plugin manifest)
-- `.claude-plugin/marketplace.json` (marketplace entry)
+- `plugins/psters-ai-workflow/.claude-plugin/plugin.json` (Claude Code plugin manifest)
+- `plugins/psters-ai-workflow/.github/plugin/plugin.json` (GitHub Copilot plugin manifest — see `COPILOT_README.md`)
+- `.claude-plugin/marketplace.json` (marketplace entry, read by both Claude Code and Copilot)
 
-**Always bump via the script** — it updates both files together and refuses to run if they
+When adding or removing an agent, update the `agents` list in **both** plugin manifests
+(`tests/manifests/copilot-manifest.test.mjs` fails if they diverge).
+
+**Always bump via the script** — it updates all three files together and refuses to run if they
 have drifted apart:
 
 ```bash

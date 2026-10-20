@@ -2,6 +2,7 @@ import {
   STATE_PATH,
   loadJsonState,
   logTelemetry,
+  normalizeHookPayload,
   readStdin,
   safeParseJson,
   sanitizeFilePath,
@@ -35,7 +36,7 @@ function isDocPath(filePath) {
 
 async function main() {
   const stdin = await readStdin();
-  const payload = safeParseJson(stdin);
+  const payload = normalizeHookPayload(safeParseJson(stdin));
   const sessionId = sanitizeSessionId(payload.session_id || payload.conversation_id || "global");
   const filePath = pickFilePath(payload);
 
